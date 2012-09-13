@@ -1,0 +1,20 @@
+15000000 SET register 5 to 0
+10000000 SET register 0 to 0
+45000000 STORE into memory location (@ value of register 5), value of reg 0
+20400000 MOVE value of reg 4 to reg 0
+D000000E If reg 0 !=0 go to line 14
+110003E8 set reg 1 to 1000
+30500000 Load value memory location in S stack and laod to A
+80100000 Subtract set reg A to the difference of A & B
+E000000E if A > 0 go to line 14
+31500000 load value at memorlay location S and load to B
+50000000 put user input number into reg A
+70100000 put sum of A & B into A
+45000000 store value of A into memory lcoaiton @register5
+B0000003 Jump to 0000003
+30500000 Load value memory location in S stack and laod to A
+60000000 Write
+
+
+registers = {0:0,1:1000,2:0,3:0,4:0,5:0}
+memory = {0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0}
