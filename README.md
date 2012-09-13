@@ -1,4 +1,5 @@
-cs-hackers
+WORM VM
 ==========
+A project inspired by CS for Hackers
 
-Class assignments for CS for Hackers
+http://alanklement.github.com/worm-vm/
