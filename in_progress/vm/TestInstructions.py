@@ -57,17 +57,6 @@ class TestInstructions(unittest.TestCase):
 		self.opCodes.STORE()
 		self.assertEquals(m[0],1)
 
-	# def test_Get_Next_Standard_Input(self):
-	# 	self.opCodes.stdOut = 55
-	# 	input = self.opCodes.getNextStandardInput()
-	# 	self.assertEquals(input,55)
-
-	# def test_READ_Next_Standard_Input_Put_In_Reg_A(self):
-	# 	r = self.opCodes.reg = [0,11,22,33,44,55]
-	# 	self.opCodes.stdOut = 99
-	# 	self.opCodes.READ()
-	# 	self.assertEquals(99,r[0])
-
 	def test_WRITE_Regsiter_A_To_stdout(self):
 		r = self.opCodes.reg = [39,11,22,33,44,55]
 		self.opCodes.WRITE()
@@ -212,5 +201,8 @@ class TestInstructions(unittest.TestCase):
 		self.assertEquals('20',self.opCodes.stdOut)	
 
 	def test_run_program_store_memory(self):
-		elf.opCodes.byteCodes = ['10000008']
+		self.opCodes.byteCodes = ['10000008','11000001','14000005','41400000']
+		self.opCodes.execute()
+		self.assertEquals(5,self.opCodes.mem[1])			
+
 
