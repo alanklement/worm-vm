@@ -27,7 +27,7 @@ class Program(object):
 	def execute(self):
 		while self.programHasInstructions():
 			self.currentByteCode = self.byteCodes[self.programCounter]
-			x =self.opcodes[self.getInstructionToRun()]()
+			x=self.opcodes[self.getInstructionToRun()]()
 			if x=='continue':
 				self.programCounter += 1 
 

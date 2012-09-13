@@ -98,12 +98,6 @@ class TestInstructions(unittest.TestCase):
 		r = self.opCodes.JMP_Z()		
 		self.assertEquals(r,'continue')
 
-	# def test_JMP_Z_advance_program_counter(self):
-	# 	self.opCodes.reg = [0,1,0,3,0,0]
-	# 	self.opCodes.currentByteCode = "C0000001"
-	# 	self.opCodes.JMP_Z()		
-	# 	self.assertEquals(1,self.opCodes.programCounter)
-
 	def test_JMP_NZ_Return_Continue(self):
 		self.opCodes.reg = [0,2,0,3,0,0]
 		self.opCodes.currentByteCode = "D0000001"
