@@ -17,6 +17,6 @@ class ArguementReader(object):
 		args = self.parser.parse_args()
 
 		self.file = args.file
-		self.verboseLevel = args.verbose
+		self.debugLvl = args.verbose
 
 

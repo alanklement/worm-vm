@@ -3,6 +3,7 @@ class Program(object):
 	def __init__(self):
 		self.reg = [0,0,0,0,0,0]
 		self.programCounter = 0
+		self.debugLvl = 0
 		self.byteCodes = []
 		self.mem = {}
 		self.stdOut = ''
@@ -27,9 +28,12 @@ class Program(object):
 	def execute(self):
 		while self.programHasInstructions():
 			self.currentByteCode = self.byteCodes[self.programCounter]
-			x=self.opcodes[self.getInstructionToRun()]()
-			if x=='continue':
+			jumpOrContinue=self.opcodes[self.getInstructionToRun()]()
+			if jumpOrContinue=='continue':
 				self.programCounter += 1 
+			self.debug()
+
+		print 'WORM Is Done'
 
 	def programHasInstructions(self):
 		return self.programCounter < len(self.byteCodes)
@@ -45,6 +49,13 @@ class Program(object):
 		print 'self.reg[3] = ' + str(self.reg[3])
 		print 'self.reg[4] = ' + str(self.reg[4])
 		print 'self.reg[5] = ' + str(self.reg[5])
+
+	def debug(self):
+		if self.debugLvl >= 1:
+			print "**just executed:", self.currentByteCode , ",",' Next command: ', self.opcodes[self.getInstructionToRun()], ", next line:" , str(self.programCounter)
+		if self.debugLvl >=2: 
+			print '>> registers: ', self.reg
+			print '>> memory:    ', self.mem	
 
 ############instructions
 
