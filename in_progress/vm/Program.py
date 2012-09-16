@@ -27,10 +27,11 @@ class Program(object):
 
 	def execute(self):
 		while self.programHasInstructions():
+			self.debugStartLoop()
 			self.currentByteCode = self.byteCodes[self.programCounter]
 			jumpOrContinue=self.opcodes[self.getInstructionToRun()]()
 			if jumpOrContinue=='continue':
-				self.programCounter += 1 
+				self.setProgramCounter(self.programCounter + 1)
 			self.debug()
 
 		print 'WORM Is Done'
@@ -50,12 +51,20 @@ class Program(object):
 		print 'self.reg[4] = ' + str(self.reg[4])
 		print 'self.reg[5] = ' + str(self.reg[5])
 
+	def debugStartLoop(self):
+		if self.debugLvl >= 2:
+			print 'starting loop at line ' , str(self.programCounter+1), ' about to run:: ', self.opcodes[self.getInstructionToRun()]
+
 	def debug(self):
 		if self.debugLvl >= 1:
-			print ">>just executed:", self.currentByteCode , ",",' Next command: ', self.opcodes[self.getInstructionToRun()], ", next line:" , str(self.programCounter)
+			print ">>just executed:", self.currentByteCode , ",",' Next command at line',str(self.programCounter+1), 'is : ', self.opcodes[self.getInstructionToRun()]
 		if self.debugLvl >=2: 
 			print '      registers:', self.reg
 			print '         memory:', self.mem	
+
+	def debugJMP(self):
+		if self.debugLvl >=3: 
+			print '\n jumping to line: ' + str(self.get28BitShort(self.currentByteCode)) + '\n'
 
 ############instructions
 
@@ -92,7 +101,7 @@ class Program(object):
 
 	def WRITE(self):
 		self.stdOut = str(self.reg[0])
-		# print 'Worm says: ' + self.stdOut
+		print 'Worm says: ' + self.stdOut
 		return 'continue'
 
 	def ADD(self):
@@ -120,32 +129,40 @@ class Program(object):
 		return 'continue'
 
 	def JMP(self):
-		self.programCounter = self.get28BitShort(self.currentByteCode)
+		self.debugJMP()
+		self.setProgramCounter(self.get28BitShort(self.currentByteCode))
 
 	def JMP_Z(self):
 		if self.reg[0]==0:
-			self.programCounter = self.get28BitShort(self.currentByteCode)
+			self.debugJMP()
+			self.setProgramCounter(self.get28BitShort(self.currentByteCode))
 		else:
 			return 'continue'
 
 	def JMP_NZ(self):
 		if self.reg[0]!=0:
-			self.programCounter = self.get28BitShort(self.currentByteCode)
+			self.debugJMP()
+			self.setProgramCounter(self.get28BitShort(self.currentByteCode))
 		else:
 		 	return'continue'
 
 	def JMP_GT(self):
 		if self.reg[0] > 0:
-			self.programCounter = self.get28BitShort(self.currentByteCode)
+			self.debugJMP()
+			self.setProgramCounter(self.get28BitShort(self.currentByteCode))
 		else:
 			return 'continue'
 
 	def JMP_LT(self):
 		if self.reg[0] < 0:
-			self.programCounter = self.get28BitShort(self.currentByteCode)
+			self.debugJMP()
+			self.setProgramCounter(self.get28BitShort(self.currentByteCode))
 		else: 
 		 	return 'continue'
 		
+	def setProgramCounter(self, goToLine):
+			self.programCounter = goToLine	
+
 	def getMemValFromPointer(self, pointer):
 		pointerVal = self.reg[pointer]
 		return self.mem[pointerVal]
@@ -160,4 +177,4 @@ class Program(object):
 		return int(arg[1:-6])
 
 	def getSrcID(self, arg):
-		return int(arg[2:-5])				
+		return int(arg[2:-5])
