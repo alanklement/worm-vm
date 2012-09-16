@@ -27,7 +27,7 @@ class Program(object):
 
 	def execute(self):
 		while self.programHasInstructions():
-			self.debugStartLoop()
+			# self.debugStartLoop()
 			self.currentByteCode = self.byteCodes[self.programCounter]
 			jumpOrContinue=self.opcodes[self.getInstructionToRun()]()
 			if jumpOrContinue=='continue':
@@ -53,7 +53,7 @@ class Program(object):
 
 	def debugStartLoop(self):
 		if self.debugLvl >= 2:
-			print 'starting loop at line ' , str(self.programCounter+1), ' about to run:: ', self.opcodes[self.getInstructionToRun()]
+			print '>>starting loop at line ' , str(self.programCounter+1), ' about to run:: ', self.opcodes[self.getInstructionToRun()]
 
 	def debug(self):
 		if self.debugLvl >= 1:
