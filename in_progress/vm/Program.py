@@ -38,6 +38,14 @@ class Program(object):
 		bc = self.byteCodes[self.programCounter]
 		return bc[0:-7]
 
+	def print_registers(self):
+		print 'self.reg[0] = ' + str(self.reg[0])
+		print 'self.reg[1] = ' + str(self.reg[1])
+		print 'self.reg[2] = ' + str(self.reg[2])
+		print 'self.reg[3] = ' + str(self.reg[3])
+		print 'self.reg[4] = ' + str(self.reg[4])
+		print 'self.reg[5] = ' + str(self.reg[5])
+
 ############instructions
 
 	def NOOP(self):
@@ -102,15 +110,6 @@ class Program(object):
 
 	def JMP(self):
 		self.programCounter = self.get28BitShort(self.currentByteCode)
-
-	def print_registers(self):
-		print 'self.reg[0] = ' + str(self.reg[0])
-		print 'self.reg[1] = ' + str(self.reg[1])
-		print 'self.reg[2] = ' + str(self.reg[2])
-		print 'self.reg[3] = ' + str(self.reg[3])
-		print 'self.reg[4] = ' + str(self.reg[4])
-		print 'self.reg[5] = ' + str(self.reg[5])
-
 
 	def JMP_Z(self):
 		if self.reg[0]==0:
