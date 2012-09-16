@@ -52,10 +52,10 @@ class Program(object):
 
 	def debug(self):
 		if self.debugLvl >= 1:
-			print "**just executed:", self.currentByteCode , ",",' Next command: ', self.opcodes[self.getInstructionToRun()], ", next line:" , str(self.programCounter)
+			print ">>just executed:", self.currentByteCode , ",",' Next command: ', self.opcodes[self.getInstructionToRun()], ", next line:" , str(self.programCounter)
 		if self.debugLvl >=2: 
-			print '>> registers: ', self.reg
-			print '>> memory:    ', self.mem	
+			print '      registers:', self.reg
+			print '         memory:', self.mem	
 
 ############instructions
 
