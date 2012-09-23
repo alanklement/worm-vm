@@ -57,7 +57,10 @@ class Program(object):
 
 	def debug(self):
 		if self.debugLvl >= 1:
-			print ">>just executed:", self.currentByteCode , ",",' Next command at line',str(self.programCounter+1), 'is : ', self.opcodes[self.getInstructionToRun()]
+			if ****test the length of the array to see if another command exists ****:
+				print ">>just executed:", self.currentByteCode , ",",' Next command at line',str(self.programCounter+1), 'is : ', self.opcodes[self.getInstructionToRun()]
+			else:
+				print 'there are no more commands to run!!'				
 		if self.debugLvl >=2: 
 			print '      registers:', self.reg
 			print '         memory:', self.mem	
