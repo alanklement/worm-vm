@@ -1,4 +1,5 @@
 .DS_STORE
 CVS/
 .svn
+.pyc
 /svn
