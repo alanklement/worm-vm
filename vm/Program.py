@@ -3,7 +3,6 @@ class Program(object):
 	def __init__(self):
 		self.reg = [0,0,0,0,0,0]
 		self.programCounter = 0
-		self.debugLvl = 0
 		self.byteCodes = []
 		self.mem = {}
 		self.stdOut = ''

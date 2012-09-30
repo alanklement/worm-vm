@@ -3,6 +3,7 @@ from Program import Program
 class DebugProgram(Program):
 	def __init__(self, arg):
 		super(DebugProgram, self).__init__()
+		self.debugLvl = 0
 
 	def execute(self):
 
