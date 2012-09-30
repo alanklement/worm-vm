@@ -26,48 +26,34 @@ class Program(object):
 			 			'F' : self.JMP_LT}
 
 	def execute(self):
-		while self.programHasInstructions():
-			self.debugStartLoop()
-			self.currentByteCode = self.byteCodes[self.programCounter]
-			jumpOrContinue=self.opcodes[self.getInstructionToRun()]()
-			if jumpOrContinue=='continue':
-				self.setProgramCounter(self.programCounter + 1)
-			self.debug()
 
+		self.startUp()
+		
+		while self.hasCommandsLeft():
+			self.doProgramLoop()			
+
+		self.shutDown()
+
+	def startUp(self):
+		self.currentByteCode = self.byteCodes[self.programCounter]
+
+	def doProgramLoop(self):				
+		jumpOrContinue=self.opcodes[self.getInstructionToRun()]()
+		if jumpOrContinue=='continue':
+			self.setProgramCounter(self.programCounter + 1)
+		
+		if self.hasCommandsLeft():
+			self.currentByteCode = self.byteCodes[self.programCounter]	
+
+	def shutDown(self):
 		print 'WORM Is Done'
-
-	def programHasInstructions(self):
-		return self.programCounter < len(self.byteCodes)
 
 	def getInstructionToRun(self):
 		bc = self.byteCodes[self.programCounter]
 		return bc[0:-7]
 
-	def print_registers(self):
-		print 'self.reg[0] = ' + str(self.reg[0])
-		print 'self.reg[1] = ' + str(self.reg[1])
-		print 'self.reg[2] = ' + str(self.reg[2])
-		print 'self.reg[3] = ' + str(self.reg[3])
-		print 'self.reg[4] = ' + str(self.reg[4])
-		print 'self.reg[5] = ' + str(self.reg[5])
-
-	def debugStartLoop(self):
-		if self.debugLvl >= 2:
-			print '>>starting loop at line ' , str(self.programCounter+1), ' about to run:: ', self.opcodes[self.getInstructionToRun()]
-
-	def debug(self):
-		if self.debugLvl >= 1:
-			if ****test the length of the array to see if another command exists ****:
-				print ">>just executed:", self.currentByteCode , ",",' Next command at line',str(self.programCounter+1), 'is : ', self.opcodes[self.getInstructionToRun()]
-			else:
-				print 'there are no more commands to run!!'				
-		if self.debugLvl >=2: 
-			print '      registers:', self.reg
-			print '         memory:', self.mem	
-
-	def debugJMP(self):
-		if self.debugLvl >=3: 
-			print '\n jumping to line: ' + str(self.get28BitShort(self.currentByteCode)) + '\n'
+	def hasCommandsLeft(self):
+		return self.programCounter < len(self.byteCodes)
 
 ############instructions
 
@@ -132,37 +118,32 @@ class Program(object):
 		return 'continue'
 
 	def JMP(self):
-		self.debugJMP()
 		self.setProgramCounter(self.get28BitShort(self.currentByteCode))
 
 	def JMP_Z(self):
-		if self.reg[0]==0:
-			self.debugJMP()
-			self.setProgramCounter(self.get28BitShort(self.currentByteCode))
+		if self.reg[0] == 0:
+			self.JMP()
 		else:
 			return 'continue'
 
 	def JMP_NZ(self):
-		if self.reg[0]!=0:
-			self.debugJMP()
-			self.setProgramCounter(self.get28BitShort(self.currentByteCode))
+		if self.reg[0] != 0:
+			self.JMP()
 		else:
 		 	return'continue'
 
 	def JMP_GT(self):
 		if self.reg[0] > 0:
-			self.debugJMP()
-			self.setProgramCounter(self.get28BitShort(self.currentByteCode))
+			self.JMP()
 		else:
 			return 'continue'
 
 	def JMP_LT(self):
 		if self.reg[0] < 0:
-			self.debugJMP()
-			self.setProgramCounter(self.get28BitShort(self.currentByteCode))
+			self.JMP()
 		else: 
 		 	return 'continue'
-		
+
 	def setProgramCounter(self, goToLine):
 			self.programCounter = goToLine	
 
@@ -181,3 +162,4 @@ class Program(object):
 
 	def getSrcID(self, arg):
 		return int(arg[2:-5])
+
