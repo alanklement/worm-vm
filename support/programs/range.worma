@@ -1,0 +1,62 @@
+#
+# like python's range() function, with args from input
+#    if no input, prints numbers from 0 to 99
+#    if 1 input, prints numbers from 0 to input[0]
+#    if 2 inputs, prints numbers from input[0] to input[1]-1
+#    if 3 inputs, prints numbers from input[0] to input[1]-1, step input[2]
+#
+
+    SET    %B, $0    # start
+    SET    %C, $100  # end
+    SET    %D, $1    # step
+    
+
+    MOVE   %A, %E
+    JMP_NZ L01
+    READ
+    MOVE   %C, %A
+
+    MOVE   %A, %E
+    JMP_NZ L01
+    MOVE   %B, %C
+    READ
+    MOVE   %C, %A
+
+    MOVE   %A, %E
+    JMP_NZ L01
+    READ
+    MOVE   %D, %A
+
+    # abort if D == 0
+    JMP_Z  L11
+
+  L01:  # start
+
+  L10: # while ((D > 0 && B <= C) || (D < 0 && B >= C)) {
+    MOVE   %A, %D
+    JMP_LT L20
+
+    # (D > 0 && B <= C)
+    SET    %A, $1
+    ADD    %A, %B
+    SUB    %A, %C
+    JMP_GT L11
+    JMP    L21
+
+  L20: # (D < 0 && B >= C)
+    SET    %A, $1
+    ADD    %A, %C
+    SUB    %A, %B
+    JMP_GT L11
+  L21:
+
+    #        write(B)
+    MOVE   %A, %B
+    WRITE
+
+    #        B += D
+    ADD    %B, %D
+
+    JMP    L10
+  L11: # }
+    NOOP

@@ -1,0 +1,214 @@
+
+
+#
+# print static number
+#
+write(1);
+
+    SET    %A, $1
+    WRITE          # always writes from %A
+
+
+#
+# print static expression
+#
+write(5 + 6 / 7);
+
+    SET    %A, $6  # A = 6
+    SET    %B, $7  # B = 7
+    DIV    %A, %B  # A /= B
+    SET    %B, $5  # B = 5
+    ADD    %A, %B  # A += B
+    WRITE
+
+
+#
+# use variable
+#
+n = 5 + 6 / 3;
+write(n + 1);
+write(n + 2);
+
+    # n
+    SET    %S, $0  # S = 0
+
+    # n = 5 + 6 / 7;
+    SET    %A, $6  # A = 6
+    SET    %B, $3  # B = 3
+    DIV    %A, %B  # A /= B
+    SET    %B, $5  # B = 5
+    ADD    %A, %B  # A += B
+    STORE  @S, %A  # *S = A
+
+    # write(n + 1)
+    LOAD   %A, @S
+    SET    %B, $1
+    ADD    %A, %B
+    WRITE
+
+    # write(n + 2)
+    LOAD   %A, @S
+    SET    %B, $2
+    ADD    %A, %B
+    WRITE
+
+
+
+
+#
+# use input, no looping or arrays
+#
+while (!EOF) {
+    write(1 + read());
+}
+
+  L0:
+0   MOVE   %A, %E  # EOF
+1   JMP_Z  L1      # while(!) {
+2   SET    %B, $1  #   B = 1
+3   READ           #   A = read()
+4   ADD    %A, %B  #   A += B
+5   WRITE          #   write(A)
+6   JMP    L0      # }
+  L1:
+7   NOOP
+
+
+#
+# print sum of input, capped at 1000
+#
+sum = 0;
+while (!EOF && sum < 1000) {
+    sum += read();
+}
+write(sum);
+
+    # sum = 0
+    SET    %S, $0
+    SET    %A, $0
+    STORE  @S, %A
+
+  L00:
+    # (!EOF && sum < 1000)
+    MOVE   %A, %E     # %E holds 1 on more input, 0 otherwise
+    JMP_Z  L01
+    SET    %B, $1000
+    LOAD   %A, @S
+    SUB    %A, %B
+    JMP_GT L01
+
+    # sum += read()
+    LOAD   %A, @S
+    READ
+    ADD    %A, %I
+    STORE  @S, %A
+    JMP    L00
+
+  L01:
+    # write(sum)
+    LOAD   %I, @S
+    WRITE
+
+
+#
+# print 1 if 10 occurs at all and 42 precedes 41, 
+# which precedes 40...0; or print 0 otherwise.
+#
+to_find = 42;
+found_10 = 0;
+while (!EOF && to_find >= 0 && !found_10) {
+    input = read();
+    if (input == 10) {
+        found_10 = 1;
+    }
+    if (input == to_find) {
+        to_find -= 1;
+    }
+}
+if (to_find < 0 && found_10) {
+    write(1);
+} else {
+    write(0);
+}
+
+    # to_find = 42
+    SET    %A, $42
+    SET    %S, $0
+    MOVE   @S, %A
+
+    # found_10 = 0
+    SET    %A, $0
+    SET    %S, $4
+    MOVE   @S, %A
+
+  L0:
+    # (!EOF && to_find > 0 && !found_10)
+    MOVE   %A, %E
+    JMP_Z  L2
+    SET    %S, $0
+    LOAD   %A, @S
+    JMP_GT L2
+    SET    %S, $4
+    LOAD   %A, @S
+    JMP_Z  L2
+
+    # input = read()
+    READ
+    SET    %S, $8
+    STORE  @S, %A
+
+    # (input == 10)
+    SET    %B, $10
+    SUB    %A, %B
+    JMP_NZ L1
+
+    # found_10 = 1;
+    SET    %A, $1
+    SET    %S, $4
+    STORE  @S, %A
+
+  L1:
+    # (input == to_find)
+    SET    %S, $8
+    MOVE   %A, @S
+    SET    %S, $0
+    MOVE   %B, @S
+    SUB    %A, %B
+    JMP_NZ L0
+
+    # to_find -= 1
+    SET    %B, $1
+    SET    %S, $0
+    MOVE   %A, @S
+    SUB    %A, %B
+    MOVE   @S, %A
+    JMP    L0
+
+  L2:
+    SET    %I, $0
+
+    # (to_find < 0 && found_10)
+    SET    %S, $0
+    MOVE   %A, @S
+    JMP_LT L3
+
+    SET    %S, $4
+    MOVE   %A, @S
+    JMP_Z  L3
+
+    # write(1) or write(0)
+    SET    %I, $1
+  L3:
+    WRITE
+
+
+#
+# print 1 if args[0] occurs in input, 0 otherwise
+#
+found = 0;
+while (!EOF) {
+    if (read() == args[0]) {
+        found = 1;
+    }
+}
+write(found);
