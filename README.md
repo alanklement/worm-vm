@@ -11,5 +11,5 @@ positional arguments:
 
 optional arguments:
   -h, --help     show this help message and exit
-  -v, --verbose  Sets verbose level. Use 'vv' for extra info
+  -v, --verbose  Sets verbose level. Use 'vvv' for extra info
   
